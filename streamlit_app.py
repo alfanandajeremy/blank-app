@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
 
 from services.google_trends import get_google_trends
 from services.rss_news import get_news
@@ -13,14 +12,12 @@ st.set_page_config(
 
 st.title("🇮🇩 Indonesia Trend Intelligence")
 
-st.markdown(
-    """
-    Dashboard AI untuk monitoring:
-    - Google Trends Indonesia
-    - Berita viral Indonesia
-    - Analisa AI DeepSeek
-    """
-)
+st.markdown("""
+Dashboard AI untuk monitoring:
+- Google Trends Indonesia
+- Berita viral Indonesia
+- Analisa AI DeepSeek
+""")
 
 api_key = st.text_input(
     "DeepSeek API Key",
@@ -45,7 +42,7 @@ if st.button("Cari Trend Terbaru"):
             trends = [f"Error Google Trends: {e}"]
 
         # =========================
-        # RSS NEWS
+        # NEWS
         # =========================
         try:
             news = get_news()
@@ -54,7 +51,7 @@ if st.button("Cari Trend Terbaru"):
             news = [f"Error News: {e}"]
 
         # =========================
-        # COMBINE DATA
+        # COMBINE
         # =========================
         combined_text = "\n".join(
             trends + news
@@ -73,14 +70,14 @@ if st.button("Cari Trend Terbaru"):
             ai_result = f"Error AI: {e}"
 
         # =========================
-        # DISPLAY AI RESULT
+        # AI RESULT
         # =========================
         st.subheader("🔥 AI Trend Analysis")
 
         st.markdown(ai_result)
 
         # =========================
-        # DISPLAY DATA
+        # DATA TABLES
         # =========================
         col1, col2 = st.columns(2)
 
@@ -111,21 +108,17 @@ if st.button("Cari Trend Terbaru"):
             )
 
         # =========================
-        # TREND CHART
+        # SIMPLE CHART
         # =========================
+        st.subheader("📊 Trend Ranking")
+
         chart_df = pd.DataFrame({
             "keyword": trends[:10],
             "score": list(range(10, 0, -1))
         })
 
-        fig = px.bar(
-            chart_df,
-            x="keyword",
-            y="score",
-            title="Top Trending Topics"
+        chart_df = chart_df.set_index(
+            "keyword"
         )
 
-        st.plotly_chart(
-            fig,
-            use_container_width=True
-        )
+        st.bar_chart(chart_df)
