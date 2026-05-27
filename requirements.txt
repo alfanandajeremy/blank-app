@@ -1,1 +1,9 @@
 streamlit
+requests
+pandas
+feedparser
+pytrends
+praw
+beautifulsoup4
+lxml
+youtube-search-python
